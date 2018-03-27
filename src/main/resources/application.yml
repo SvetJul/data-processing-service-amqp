@@ -1,0 +1,42 @@
+processing:
+  timeout.minutes: 1
+  queue.capacity: 1000
+server:
+  port: 8080
+spring:
+  application.name: calculation-service
+  cloud:
+    stream:
+      rabbit:
+        bindings:
+          f1CalculationInputChannel:
+            consumer:
+              maxConcurrency: 20
+              bindingRoutingKey: f1
+          f1CalculationOutputChannel:
+            producer:
+              routingKeyExpression: '''f1'''
+          f2CalculationInputChannel:
+            consumer:
+              maxConcurrency: 20
+              bindingRoutingKey: f2
+          f2CalculationOutputChannel:
+            producer:
+              routingKeyExpression: '''f2'''
+      bindings:
+        f1CalculationInputChannel:
+          destination: calculation.requested.exchange
+          group: ${spring.application.name}.f1
+        f1CalculationOutputChannel:
+          destination: calculation.requested.exchange
+
+        f2CalculationInputChannel:
+          destination: calculation.requested.exchange
+          group: ${spring.application.name}.f2
+        f2CalculationOutputChannel:
+          destination: calculation.requested.exchange
+
+        calculationCompletedInputChannel:
+          destination: calculation.comleted.exchange
+        calculationCompletedOutputChannel:
+          destination: calculation.comleted.exchange
