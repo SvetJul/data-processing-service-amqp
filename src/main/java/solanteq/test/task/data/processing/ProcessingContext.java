@@ -36,11 +36,9 @@ public class ProcessingContext {
 
             return Optional.of(value);
 
-        } else if (isFullyProcessed()) {
-            result.put(arguments.take());
+        } else {
+            return Optional.empty();
         }
-
-        return Optional.empty();
     }
 
     private synchronized boolean isFullyProcessed() {
@@ -52,8 +50,12 @@ public class ProcessingContext {
     }
 
     @SneakyThrows
-    public void supplyArgument(Integer candidate) {
-        arguments.put(candidate);
+    public synchronized void supplyArgument(Integer candidate) {
+        if (!isFullyProcessed()) {
+            arguments.put(candidate);
+        } else {
+            result.put(candidate);
+        }
     }
 
     public synchronized void finishDataProviding(long totalOperationsCount) {

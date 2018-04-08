@@ -1,5 +1,5 @@
 processing:
-  timeout.minutes: 1
+  timeout.minutes: 10
   queue.capacity: 1000
 server:
   port: 8080
@@ -29,13 +29,11 @@ spring:
           group: ${spring.application.name}.f1
         f1CalculationOutputChannel:
           destination: calculation.requested.exchange
-
         f2CalculationInputChannel:
           destination: calculation.requested.exchange
           group: ${spring.application.name}.f2
         f2CalculationOutputChannel:
           destination: calculation.requested.exchange
-
         calculationCompletedInputChannel:
           destination: calculation.comleted.exchange
         calculationCompletedOutputChannel:
